@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Reveal Message - Steganography Tool{% endblock %}
+
+{% block content %}
+<div class="section">
+    <h2>🔍 Reveal Message</h2>
+    <form action="{{ url_for('decode') }}" method="post" enctype="multipart/form-data" id="decode-form">
+        <div class="input-group">
+            <div class="file-upload-wrapper">
+                <div class="upload-icon">📁</div>
+                <p>Drop your image with hidden message here or click to browse</p>
+                <input type="file" name="file" id="decode-file" accept=".png" required>
+                <label for="decode-file" class="file-label">Choose File</label>
+            </div>
+            <p class="selected-file" style="margin-top: 10px; text-align: center;"></p>
+        </div>
+        <button type="submit">Reveal Message 🔓</button>
+    </form>
+    
+    {% if decoded_message %}
+    <div class="message-container" id="message-container">
+        <h3>📝 Decoded Message:</h3>
+        <p>{{ decoded_message }}</p>
+        <a href="{{ url_for('download_message') }}" class="download-btn" onclick="hideMessage()">
+            Download Message 📥
+        </a>
+    </div>
+    {% endif %}
+</div>
+<a href="{{ url_for('index') }}" class="back-button">← Back to Menu</a>
+
+<script>
+    document.getElementById('decode-file').addEventListener('change', function(e) {
+        var fileName = e.target.files[0].name;
+        document.querySelector('.selected-file').textContent = 'Selected file: ' + fileName;
+        
+        // Clear any existing message when a new file is selected
+        const messageContainer = document.getElementById('message-container');
+        if (messageContainer) {
+            messageContainer.remove();
+        }
+    });
+
+    function hideMessage() {
+        setTimeout(function() {
+            const messageContainer = document.getElementById('message-container');
+            if (messageContainer) {
+                messageContainer.style.opacity = '0';
+                setTimeout(() => messageContainer.remove(), 300);
+            }
+        }, 100);
+    }
+</script>
+{% endblock %}

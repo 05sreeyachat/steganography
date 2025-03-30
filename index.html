@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Steganography Tool</title>
+    <style>
+        :root {
+            --primary-color: #00a8ff;
+            --secondary-color: #2f3640;
+            --accent-color: #4cd137;
+            --error-color: #e84118;
+            --bg-color: #1e272e;
+            --text-color: #dcdde1;
+            --border-color: #487eb0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #2d3436 0%, #0a0c0f 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .container {
+            background-color: var(--secondary-color);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .section {
+            background-color: #353b48;
+            border: 1px solid var(--border-color);
+        }
+
+        .section:hover {
+            box-shadow: 0 0 15px rgba(0, 168, 255, 0.2);
+        }
+
+        input[type="text"] {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border-color: var(--border-color);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(0, 168, 255, 0.3);
+        }
+
+        .file-upload-wrapper {
+            background-color: var(--bg-color);
+            border-color: var(--border-color);
+        }
+
+        .file-upload-wrapper:hover {
+            background-color: #2f3640;
+            border-color: var(--primary-color);
+        }
+
+        .flash-messages {
+            background-color: #2f3640;
+            border-left: 5px solid var(--error-color);
+            color: var(--text-color);
+        }
+
+        input[type="file"] {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border: none;
+            background-color: var(--secondary-color);
+            border-radius: 12px;
+            transition: transform 0.2s;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .flash-messages {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff3cd;
+            border-left: 5px solid var(--error-color);
+            border-radius: 4px;
+            color: #856404;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            border: 2px dashed var(--primary-color);
+            border-radius: 8px;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        input[type="text"] {
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            border: 2px dashed var(--primary-color);
+        }
+
+        .file-upload-wrapper:hover {
+            background-color: #f8f9fa;
+        }
+
+        .upload-icon {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        .menu-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .menu-button {
+            padding: 20px 40px;
+            font-size: 1.2em;
+            width: 200px;
+            text-align: center;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        {% extends "base.html" %}
+
+        {% block content %}
+        <div class="hero-section">
+            <div class="hero-content">
+                <p class="hero-description">Hide your secret messages within images securely and seamlessly</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Hide Message</h3>
+                    <p>Embed your secret message within any PNG image</p>
+                    <a href="{{ url_for('encode_page') }}" class="feature-button">
+                        Start Encoding →
+                    </a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Reveal Message</h3>
+                    <p>Extract hidden messages from encoded images</p>
+                    <a href="{{ url_for('decode_page') }}" class="feature-button">
+                        Start Decoding →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .hero-section {
+                text-align: center;
+                padding: 40px 20px;
+                animation: fadeIn 0.8s ease-out;
+            }
+
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            .hero-content {
+                margin-bottom: 60px;
+            }
+
+            .hero-description {
+                font-size: 1.4em;
+                color: var(--text-color);
+                opacity: 0.9;
+                margin: 20px 0 40px;
+            }
+
+            .features-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 30px;
+                margin-top: 40px;
+            }
+
+            .feature-card {
+                background: rgba(0, 0, 0, 0.2);
+                padding: 30px;
+                border-radius: 15px;
+                transition: all 0.3s ease;
+                border: 1px solid var(--border-color);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .feature-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+                transform: scaleX(0);
+                transition: transform 0.3s ease;
+            }
+
+            .feature-card:hover::before {
+                transform: scaleX(1);
+            }
+
+            .feature-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            }
+
+            .feature-icon {
+                font-size: 3em;
+                margin-bottom: 20px;
+            }
+
+            .feature-card h3 {
+                color: var(--primary-color);
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+
+            .feature-card p {
+                color: var(--text-color);
+                opacity: 0.8;
+                margin-bottom: 25px;
+                line-height: 1.6;
+            }
+
+            .feature-button {
+                display: inline-block;
+                padding: 12px 25px;
+                background-color: var(--primary-color);
+                color: white;
+                text-decoration: none;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                font-weight: 500;
+            }
+
+            .feature-button:hover {
+                background-color: var(--hover-color);
+                transform: translateX(5px);
+            }
+
+            @media (max-width: 768px) {
+                .features-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .hero-description {
+                    font-size: 1.2em;
+                }
+            }
+        </style>
+        {% endblock %}
+    </div>
+</body>
+</html>

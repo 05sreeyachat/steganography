@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Hide Message - Steganography Tool{% endblock %}
+
+{% block content %}
+<div class="section">
+    <h2>🔒 Hide Message</h2>
+    <form action="{{ url_for('encode') }}" method="post" enctype="multipart/form-data">
+        <div class="input-group">
+            <label for="message">Secret Message</label>
+            <input type="text" name="message" id="message" placeholder="Type your secret message here..." required>
+        </div>
+        <div class="input-group">
+            <div class="file-upload-wrapper">
+                <div class="upload-icon">📁</div>
+                <p>Drop your PNG image here or click to browse</p>
+                <input type="file" name="file" id="file" accept=".png" required>
+                <label for="file" class="file-label">Choose File</label>
+            </div>
+            <p class="selected-file" style="margin-top: 10px; text-align: center;"></p>
+        </div>
+        <button type="submit">Hide Message 🔐</button>
+    </form>
+</div>
+<a href="{{ url_for('index') }}" class="back-button">← Back to Menu</a>
+
+<script>
+    document.getElementById('file').addEventListener('change', function(e) {
+        var fileName = e.target.files[0].name;
+        document.querySelector('.selected-file').textContent = 'Selected file: ' + fileName;
+    });
+</script>
+{% endblock %}
